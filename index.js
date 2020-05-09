@@ -10,23 +10,20 @@ const inputs = {
     main_grammar: core.getInput("main-grammar")
 };
 
-const workspace = get_workspace_path();
+const run = command => {
+    return new Promise((res, rej) => {
+        exec(command, (error, stdout, stderr) => {
+            if (error) {
+                return rej(error.message);
+            }
 
-start()
-    .then(() => {
-        core.setOutput("output", path.resolve(inputs.output));
-    })
-    .catch(error => {
-        core.setFailed(error);
+            if (stderr) {
+                return rej(stderr);
+            }
+
+            return res(stdout);
+        });
     });
-
-const start = async () => {
-    await install_jdk();
-    await download_antlr_tool();
-    await create_source_file_folder();
-    await copy_source_files();
-    await generate_source_codes();
-    await clean_up_source_folder();
 };
 
 const install_jdk = async () => {
@@ -85,18 +82,21 @@ const clean_up_source_folder = async () => {
     await run("rm -rf ./source/*");
 }
 
-const run = command => {
-    return new Promise((res, rej) => {
-        exec(command, (error, stdout, stderr) => {
-            if (error) {
-                return rej(error.message);
-            }
+const workspace = get_workspace_path();
 
-            if (stderr) {
-                return rej(stderr);
-            }
-
-            return res(stdout);
-        });
-    });
+const start = async () => {
+    await install_jdk();
+    await download_antlr_tool();
+    await create_source_file_folder();
+    await copy_source_files();
+    await generate_source_codes();
+    await clean_up_source_folder();
 };
+
+start()
+    .then(() => {
+        core.setOutput("output", path.resolve(inputs.output));
+    })
+    .catch(error => {
+        core.setFailed(error);
+    });
