@@ -1,0 +1,24 @@
+name: "ANTLR Code Generator"
+description: "Generate code from ANTLR grammar file"
+inputs:
+  language:
+    description: "Generating target language, `CSharp` if omitted"
+    required: false
+    default: "CSharp"
+  output:
+    description: "Where to put generated files, `./generated` if omitted"
+    required: false
+    default: "./generated"
+  grammar-files:
+    description: "Source grammar file(s), split with comma if more than one"
+    required: true
+  main-grammar:
+    description: "Name of main grammar file, first `g4` file if omitted"
+    required: false
+    default: "*.g4"
+outputs:
+  generated:
+    description: "The folder path where the code generated"
+runs:
+  using: "node12"
+  main: "index.js"

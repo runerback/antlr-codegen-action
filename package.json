@@ -1,0 +1,14 @@
+{
+  "name": "antlr-codegen-action",
+  "version": "1.0.0",
+  "description": "A github action in docker for generate code from ANTLR grammar file.",
+  "main": "index.js",
+  "repository": "https://github.com/runerback/antlr-codegen-action",
+  "author": "runerback <runerback@hotmail.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@actions/core": "^1.2.4",
+    "@actions/github": "^2.2.0"
+  }
+}
