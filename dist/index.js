@@ -144,9 +144,10 @@ const generate_source_codes = async () => {
     console.log("generating source codes");
 
     const output = path.join(workspace, inputs.output);
+    const entry = path.join(workspace, inputs.main_grammar);
 
     await run(
-        `java -Xmx500M -cp "./antlr.jar:$CLASSPATH" org.antlr.v4.Tool -Dlanguage=${inputs.language} -o ${output} ${inputs.main_grammar}`
+        `java -Xmx500M -cp "./antlr.jar:$CLASSPATH" org.antlr.v4.Tool -Dlanguage=${inputs.language} -o ${output} ${entry}`
     );
 }
 
