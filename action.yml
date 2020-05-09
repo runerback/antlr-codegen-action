@@ -21,4 +21,4 @@ outputs:
     description: "The folder path where the code generated"
 runs:
   using: "node12"
-  main: "index.js"
+  main: "dist/index.js"
