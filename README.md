@@ -20,6 +20,8 @@ Where to put generated files. Default `"./generated"`.
 
 Name of main grammar file. Default `"*.g4"`.
 
+\****Note*** that the input file name or path are relative to root path of repository.
+
 ## Outputs
 
 ### `generated`

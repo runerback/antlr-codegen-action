@@ -1,5 +1,4 @@
 const core = require("@actions/core");
-const github = require("@actions/github");
 const path = require("path");
 const fs = require("fs");
 const { exec } = require("child_process");
@@ -11,7 +10,7 @@ const inputs = {
     main_grammar: core.getInput("main-grammar")
 };
 
-console.log("inputs: " + JSON(inputs));
+const workspace = get_workspace_path();
 
 start()
     .then(() => {
@@ -25,6 +24,7 @@ const start = async () => {
     await install_jdk();
     await download_antlr_tool();
     await create_source_file_folder();
+    await copy_source_files();
     await generate_source_codes();
     await clean_up_source_folder();
 };
@@ -48,12 +48,20 @@ const create_source_file_folder = async () => {
     await run("mkdir -p ./source");
 };
 
+const get_workspace_path = () => {
+    let githubWorkspacePath = process.env["GITHUB_WORKSPACE"];
+    if (!githubWorkspacePath) {
+        throw new Error("GITHUB_WORKSPACE not defined");
+    }
+    return path.resolve(githubWorkspacePath);
+};
+
 const copy_source_files = async () => {
     console.log("copying source files");
 
     for (const file in inputs.grammar_files) {
         fs.copyFileSync(
-            file,
+            path.join(workspace, file),
             path.join("./source", path.basename(file))
         );
     }
@@ -64,8 +72,10 @@ const copy_source_files = async () => {
 const generate_source_codes = async () => {
     console.log("generating source codes");
 
+    const output = path.join(workspace, inputs.output);
+
     await run(
-        `java -Xmx500M -cp "./antlr.jar:$CLASSPATH" org.antlr.v4.Tool -Dlanguage=${inputs.language} -o ${inputs.output} ${inputs.main_grammar}`
+        `java -Xmx500M -cp "./antlr.jar:$CLASSPATH" org.antlr.v4.Tool -Dlanguage=${inputs.language} -o ${output} ${inputs.main_grammar}`
     );
 }
 
