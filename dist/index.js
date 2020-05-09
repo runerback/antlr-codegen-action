@@ -56,6 +56,7 @@ module.exports = require("os");
 const core = __webpack_require__(470);
 const path = __webpack_require__(622);
 const fs = __webpack_require__(747);
+const https = __webpack_require__(211);
 const { exec } = __webpack_require__(129);
 
 const inputs = {
@@ -91,7 +92,25 @@ const install_jdk = async () => {
 const download_antlr_tool = async () => {
     console.log("downloading ANTLR Tool");
 
-    await run("curl -o antlr.jar https://www.antlr.org/download/antlr-4.8-complete.jar");
+    const dest = path.join(".", "antlr.jar");
+
+    await new Promise((res, rej) => {
+        const file = fs.createWriteStream(dest);
+
+        https.get("https://www.antlr.org/download/antlr-4.8-complete.jar", res => {
+            res.pipe(file);
+        }).on("error", error => {
+            fs.unlink(dest);
+
+            rej(error);
+        });
+
+        file.on("finish", () => {
+            file.close();
+
+            res();
+        });
+    });
 };
 
 const create_source_file_folder = async () => {
@@ -163,6 +182,13 @@ start()
 /***/ (function(module) {
 
 module.exports = require("child_process");
+
+/***/ }),
+
+/***/ 211:
+/***/ (function(module) {
+
+module.exports = require("https");
 
 /***/ }),
 
