@@ -109,10 +109,8 @@ const install_jdk = async () => {
         sudo rm *.postinst
         cd ~/
         sudo apt-get update
-        sudo apt-get --allow install openjdk-8-jre-headless
+        sudo apt-get install openjdk-8-jre-headless
         JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
-        # source /etc/environment
-        echo $JAVA_HOME
         java -version
     `);
 };
