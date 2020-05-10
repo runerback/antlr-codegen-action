@@ -41,7 +41,7 @@ const install_jdk = async () => {
     await run("sudo apt-get update");
     await run("sudo apt-get install openjdk-8-jre-headless");
     await run(`JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"`);
-    await run("java -version");
+    // await run("java -version");
 };
 
 const download_antlr_tool = async () => {
