@@ -37,27 +37,11 @@ const run = command => {
 const install_jdk = async () => {
     console.log("installing jdk");
 
-    // await run("cd /var/lib/dpkg/info && sudo rm *.postinst");
-    // await run("sudo apt-get update");
-
-    // await run("sudo apt-get --force-yes install openjdk-8-jre-headless");
-
-    // await run("JAVA_HOME=\"/usr/lib/jvm/java-8-openjdk-amd64\"");
-    // await run("source /etc/environment");
-
-    // await run("echo $JAVA_HOME");
-    // await run("java --version");
-
-    await run(`
-        #!/bin/bash
-        cd /var/lib/dpkg/info
-        sudo rm *.postinst
-        cd ~/
-        sudo apt-get update
-        sudo apt-get install openjdk-8-jre-headless
-        JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
-        java -version
-    `);
+    await run("cd /var/lib/dpkg/info && sudo rm *.postinst");
+    await run("sudo apt-get update");
+    await run("sudo apt-get install openjdk-8-jre-headless");
+    await run(`JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"`);
+    await run("java -version");
 };
 
 const download_antlr_tool = async () => {
