@@ -37,8 +37,7 @@ const run = command => {
 const install_jdk = async () => {
     console.log("installing jdk");
 
-    // await run("sudo apt update");
-    await run("sudo apt install openjdk-8-jre-headless");
+    await run("sudo apt-get install openjdk-8-jre-headless");
     await run("java --version");
     await run("echo $JAVA_HOME");
 };
