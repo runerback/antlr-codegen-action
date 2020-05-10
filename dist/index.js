@@ -79,7 +79,9 @@ const run = command => {
                 return rej(stderr);
             }
 
-            return res(stdout);
+            console.log(stdout);
+
+            return res();
         });
     });
 };
@@ -99,18 +101,21 @@ const download_antlr_tool = async () => {
     await new Promise((res, rej) => {
         const file = fs.createWriteStream(dest);
 
-        https.get("https://www.antlr.org/download/antlr-4.8-complete.jar", res => {
-            res.pipe(file);
+        https.get("https://www.antlr.org/download/antlr-4.8-complete.jar", response => {
+            console.log("downloading...");
+
+            response.pipe(file);
+
+            file.on("finish", () => {
+                console.log("downloaded");
+
+                file.close();
+                res();
+            });
         }).on("error", error => {
             fs.unlink(dest);
 
             rej(error);
-        });
-
-        file.on("finish", () => {
-            file.close();
-
-            res();
         });
     });
 };
