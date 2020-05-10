@@ -12,6 +12,8 @@ const inputs = {
 };
 
 const run = command => {
+    console.log(`[bash] ${command}`);
+
     return new Promise((res, rej) => {
         exec(command, (error, stdout, stderr) => {
             if (error) {
@@ -37,7 +39,7 @@ const install_jdk = async () => {
 const download_antlr_tool = async () => {
     console.log("downloading ANTLR Tool");
 
-    const dest = path.join(".", "antlr.jar");
+    const dest = path.resolve("antlr.jar");
 
     await new Promise((res, rej) => {
         const file = fs.createWriteStream(dest);
@@ -61,7 +63,14 @@ const download_antlr_tool = async () => {
 const create_source_file_folder = async () => {
     console.log("create source file folder");
 
-    await run("mkdir -p ./source");
+    await new Promise((res, rej) => {
+        fs.mkdir("source", error => {
+            if (error)
+                return rej(error);
+
+            return res();
+        });
+    });
 };
 
 const get_workspace_path = () => {
@@ -88,18 +97,26 @@ const copy_source_files = async () => {
 const generate_source_codes = async () => {
     console.log("generating source codes");
 
+    const tool = path.resolve("antlr.jar");
     const output = path.join(workspace, inputs.output);
     const entry = path.join(workspace, inputs.main_grammar);
 
     await run(
-        `java -Xmx500M -cp "./antlr.jar:$CLASSPATH" org.antlr.v4.Tool -Dlanguage=${inputs.language} -o ${output} ${entry}`
+        `java -Xmx500M -cp "${tool}:$CLASSPATH" org.antlr.v4.Tool -Dlanguage=${inputs.language} -o ${output} ${entry}`
     );
 }
 
 const clean_up_source_folder = async () => {
     console.log("clean up source folder");
 
-    await run("rm -rf ./source/*");
+    await new Promise((res, rej) => {
+        fs.rmdir("source", { recursive: true }, error => {
+            if (error)
+                return rej(error);
+
+            return res();
+        });
+    });
 }
 
 const workspace = get_workspace_path();
