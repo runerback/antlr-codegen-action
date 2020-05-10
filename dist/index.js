@@ -62,8 +62,6 @@ const { exec } = __webpack_require__(129);
 const antlr_tool = path.resolve("antlr.jar");
 const temp_antlr_source = path.resolve("antlr_source_tmp");
 
-const workspace = get_workspace_path();
-
 const inputs = {
     language: core.getInput("language"),
     output: core.getInput("output"),
@@ -143,6 +141,8 @@ const get_workspace_path = () => {
     }
     return path.resolve(githubWorkspacePath);
 };
+
+const workspace = get_workspace_path();
 
 const copy_source_files = async () => {
     console.log("copying source files");
