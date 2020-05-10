@@ -89,12 +89,16 @@ const get_workspace_path = () => {
 const copy_source_files = async () => {
     console.log("copying source files");
 
+    const dest = path.resolve("source");
+
     for (const file of inputs.grammar_files) {
         fs.copyFileSync(
             path.join(workspace, file),
-            path.join("./source", path.basename(file))
+            path.join(dest, path.basename(file))
         );
     }
+
+    await run(`cd ${dest} && ls`)
 
     await Promise.resolve();
 };
