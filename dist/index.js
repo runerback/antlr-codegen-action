@@ -92,13 +92,28 @@ const run = command => {
 const install_jdk = async () => {
     console.log("installing jdk");
 
-    await run("sudo apt-get install openjdk-8-jre-headless");
+    // await run("cd /var/lib/dpkg/info && sudo rm *.postinst");
+    // await run("sudo apt-get update");
 
-    await run("JAVA_HOME=\"/usr/lib/jvm/java-8-openjdk-amd64\"");
-    await run("source /etc/environment");
-    
-    await run("echo $JAVA_HOME");
-    await run("java --version");
+    // await run("sudo apt-get --force-yes install openjdk-8-jre-headless");
+
+    // await run("JAVA_HOME=\"/usr/lib/jvm/java-8-openjdk-amd64\"");
+    // await run("source /etc/environment");
+
+    // await run("echo $JAVA_HOME");
+    // await run("java --version");
+
+    await run(`#!/bin/bash
+        cd /var/lib/dpkg/info
+        sudo rm *.postinst
+        cd ~/
+        sudo apt-get update
+        sudo apt-get --force-yes install openjdk-8-jre-headless
+        JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+        source /etc/environment
+        echo $JAVA_HOME
+        java --version
+    `);
 };
 
 const download_antlr_tool = async () => {
@@ -168,7 +183,7 @@ const generate_source_codes = async () => {
     const output = path.join(workspace, inputs.output);
     const entry = path.join(temp_antlr_source, inputs.main_grammar);
 
-    if(!fs.existsSync(output))
+    if (!fs.existsSync(output))
         fs.mkdirSync(output);
 
     await run(
