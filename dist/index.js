@@ -103,16 +103,17 @@ const install_jdk = async () => {
     // await run("echo $JAVA_HOME");
     // await run("java --version");
 
-    await run(`#!/bin/bash
+    await run(`
+        #!/bin/bash
         cd /var/lib/dpkg/info
         sudo rm *.postinst
         cd ~/
         sudo apt-get update
-        sudo apt-get --force-yes install openjdk-8-jre-headless
+        sudo apt-get --allow install openjdk-8-jre-headless
         JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
-        source /etc/environment
+        # source /etc/environment
         echo $JAVA_HOME
-        java --version
+        java -version
     `);
 };
 
