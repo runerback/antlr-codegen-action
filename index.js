@@ -37,8 +37,10 @@ const run = command => {
 const install_jdk = async () => {
     console.log("installing jdk");
 
-    // await run("sudo apt-get update");
-    await run("sudo apt-get install openjdk-8-jre-headless");
+    // await run("sudo apt update");
+    await run("sudo apt install openjdk-8-jre-headless");
+    await run("java --version");
+    await run("echo $JAVA_HOME");
 };
 
 const download_antlr_tool = async () => {
@@ -108,8 +110,11 @@ const generate_source_codes = async () => {
     const output = path.join(workspace, inputs.output);
     const entry = path.join(temp_antlr_source, inputs.main_grammar);
 
+    if(!fs.existsSync(output))
+        fs.mkdirSync(output);
+
     await run(
-        `java -Xmx500M -cp "${antlr_tool}:$CLASSPATH" org.antlr.v4.Tool -Dlanguage=${inputs.language} -o ${output} ${entry}`
+        `java -Xmx500M -cp '${antlr_tool}:$CLASSPATH' org.antlr.v4.Tool -Dlanguage=${inputs.language} -o '${output}' '${entry}'`
     );
 }
 
