@@ -1,6 +1,6 @@
 # ANTLR CodeGen Docker Action
 
-A github action in docker for generate code from ANTLR grammar file.
+A github action to generate code from ANTLR grammar file.
 
 ## Inputs
 
